@@ -1,4 +1,4 @@
-name: Azure OIDC Login
+name: Azure OIDC Login + Terraform
 
 on:
   push:
@@ -24,6 +24,17 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Run Azure CLI command
-        run: |
-          az group list
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.6  # (optional, specify your version)
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Validate (optional)
+        run: terraform validate
+       
+      - name: Terraform Plan
+        run: terraform plan -input=false
+       
